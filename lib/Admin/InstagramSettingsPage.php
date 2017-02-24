@@ -47,6 +47,11 @@ class InstagramSettingsPage extends Page {
       'title' => 'Post Limit',
       'args' => array('Maximum number of posts to save', '<em>Set to "0" to keep all posts indefinitely.</em>')
     ),
+    'instagram_save_image' => array(
+      'type' => 'checkbox',
+      'title' => 'Save Image',
+      'args' => array('Download the posted image to the media gallery as the thumbnail for each post.')
+    ),
     'instagram_cron' => array(
       'type' => 'cron',
       'title' => 'Scheduled Sync',

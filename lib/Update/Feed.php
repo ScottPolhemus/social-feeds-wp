@@ -13,6 +13,8 @@ require_once(ABSPATH.'wp-admin/includes/image.php');
 class Feed {
 
   function __construct($options = array()) {
+    $this->options = $options;
+
     if(isset($options['sync_start_date'])) {
       $this->start_time = strtotime($options['sync_start_date']);
     }
@@ -40,7 +42,7 @@ class Feed {
     if(empty($results)) {
       return;
     }
-    
+
     foreach ($results as $social_post) {
       $post_info = $this->parse($social_post);
 
@@ -118,7 +120,7 @@ class Feed {
 
       update_post_meta($id, 'social_post_permalink', $post_info['permalink']);
 
-      if($post_info['image']) {
+      if($post_info['image'] && $options['save_image']) {
         update_post_meta($id, 'social_post_image', $post_info['image']);
         media_sideload_image($post_info['image'], $id);
         $images = array_values(get_attached_media('image', $id));
@@ -164,7 +166,7 @@ class Feed {
   function prune_social_post($network = '', $max = -1) {
 
     if(!$max || $max <= 0) return;
-    
+
     $latest_posts = new WP_Query( array(
       'post_type'  =>  'social-post',
       'post_status' => 'publish',
