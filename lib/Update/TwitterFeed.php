@@ -35,7 +35,7 @@ class TwitterFeed extends Feed {
     if($usernames) {
       foreach ($usernames as $username) {
         $url = 'https://api.twitter.com/1.1/statuses/user_timeline.json';
-        $query = '?screen_name='.$username.'&count=30&exclude_replies=1'; 
+        $query = '?screen_name='.$username.'&count=30&exclude_replies=1';
 
         $feed =
           $this->twitter->setGetfield($query)
@@ -52,6 +52,16 @@ class TwitterFeed extends Feed {
   }
 
   function parse($social_post) {
+    if ($social_post['source']) {
+      $social_post['source'] = htmlspecialchars($social_post['source']);
+    }
+    if ($social_post['quoted_status']['source']) {
+      $social_post['quoted_status']['source'] = htmlspecialchars($social_post['quoted_status']['source']);
+    }
+    if ($social_post['retweeted_status']['source']) {
+      $social_post['retweeted_status']['source'] = htmlspecialchars($social_post['retweeted_status']['source']);
+    }
+
     return array(
       'permalink' => 'https://twitter.com/'.$social_post['user']['screen_name'].'/status/'.$social_post['id'],
       'text' => $social_post['text'],
