@@ -100,6 +100,7 @@ class SocialFeeds {
       ),
       'public' => false,
       'show_ui' => false,
+      'show_admin_column' => true,
       'show_tagcloud' => false,
       'query_var'    => false,
       'hierarchical' => false,
