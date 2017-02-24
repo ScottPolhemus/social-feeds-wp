@@ -6,7 +6,7 @@ Version: 0.2.0
 */
 
 /*
-Hide API credentials from dashboard by defining in your wp-config 
+Hide API credentials from dashboard by defining in your wp-config
 
   define( 'SF_TWITTER_CONSUMER_KEY', 'YOUR KEY' );
   define( 'SF_TWITTER_CONSUMER_SECRET', 'YOUR SECRET' );
@@ -54,7 +54,7 @@ class SocialFeeds {
     foreach ($settings as $key) {
       $value = null;
       $setting_const = strtoupper('sf_'.$key);
-      
+
       if(defined($setting_const)) {
         $value = constant($setting_const);
       } else if(array_key_exists($key, $options)) {
@@ -132,7 +132,6 @@ class SocialFeeds {
    */
   function init_admin() {
 
-    new Admin\SelectPostsPage;
     new Admin\InstagramSettingsPage;
     new Admin\TwitterSettingsPage;
     new Admin\LinkedInSettingsPage;
@@ -183,13 +182,7 @@ class SocialFeeds {
     });
 
     add_filter('manage_social-post_posts_columns', function($columns) {
-      return array_slice($columns, 0, 1) +
-        array('thumbnail' => '') +
-        array_slice($columns, 1, count($columns)-2) +
-        array(
-          'date' => 'Date',
-          'date-created' => 'Date Created'
-        );
+      return $columns+array('date-created' => 'Date Created');
     });
 
     add_filter('manage_edit-social-post_sortable_columns', function($columns) {

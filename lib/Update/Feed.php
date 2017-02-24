@@ -92,6 +92,11 @@ class Feed {
    */
   function update_social_post($post_info) {
     $title = $post_info['text'];
+
+    if (strlen($title) > 140) {
+      $title = substr($title, 0, 140).'…';
+    }
+
     $content = $this->linkify->process($post_info['text']);
 
     $existing = get_posts(array(
@@ -120,8 +125,9 @@ class Feed {
 
       update_post_meta($id, 'social_post_permalink', $post_info['permalink']);
 
-      if($post_info['image'] && $options['save_image']) {
-        update_post_meta($id, 'social_post_image', $post_info['image']);
+      update_post_meta($id, 'social_post_image', $post_info['image']);
+
+      if($post_info['image'] && @$this->options['save_image']) {
         media_sideload_image($post_info['image'], $id);
         $images = array_values(get_attached_media('image', $id));
         set_post_thumbnail($id, $images[0]->ID);

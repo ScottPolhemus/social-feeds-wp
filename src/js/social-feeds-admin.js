@@ -37,14 +37,15 @@ $(function() {
       data: formData,
       success: function(data) {
         if(data.updated) {
-          $syncButton.text('Sync Finished');
           showSyncNotice(data);
         }
       },
-      error: function() {
-        $syncButton.text('Sync Failed');
-      },
-      complete: function() {
+      complete: function(jqXHR, textStatus) {
+        if (jqXHR.status >= 200 && jqXHR.status < 400) {
+          $syncButton.text('Sync Finished');
+        } else {
+          $syncButton.text('Sync Failed');
+        }
         $form.removeClass('social-feeds-loading');
       }
     });
