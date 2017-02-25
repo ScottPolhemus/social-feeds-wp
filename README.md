@@ -23,10 +23,10 @@ __Social Type__ (taxonomy): [Network]
 __Custom Fields__:
 - `social_post_created`: [Original post timestamp]
 - `social_post_details`: [Original post JSON]
-- `social_post_permalink`: [Origial post URL]
-- `social_post_username`: [Origial post author]
-- `social_post_image`: [Origial post image (if any)]
-- `social_post_video`: [Origial post video (if any)]
+- `social_post_permalink`: [Original post URL]
+- `social_post_username`: [Original post author]
+- `social_post_image`: [Original post image (if any)]
+- `social_post_video`: [Original post video (if any)]
 
 ## Settings
 
