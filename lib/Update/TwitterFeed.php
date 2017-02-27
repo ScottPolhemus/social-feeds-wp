@@ -52,18 +52,17 @@ class TwitterFeed extends Feed {
   }
 
   function parse($social_post) {
+    $post_text = $social_post['text'];
+
     array_walk_recursive($social_post, function(&$val, $key) {
-      if ($key === 'source') {
-        $val = htmlspecialchars($val);
-      }
-      if ($key === 'text') {
-        $val = htmlentities($val);
+      if ($key === 'source' || $key === 'text') {
+        $val = htmlentities($val, ENT_COMPAT | ENT_HTML5);
       }
     });
 
     return array(
       'permalink' => 'https://twitter.com/'.$social_post['user']['screen_name'].'/status/'.$social_post['id_str'],
-      'text' => $social_post['text'],
+      'text' => $post_text,
       'image' => false,
       'video' => false,
       'username' => $social_post['user']['screen_name'],
