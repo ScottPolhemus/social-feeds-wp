@@ -52,19 +52,14 @@ class TwitterFeed extends Feed {
   }
 
   function parse($social_post) {
-    $social_post['text'] = htmlentities($social_post['text']);
-
-    if ($social_post['source']) {
-      $social_post['source'] = htmlspecialchars($social_post['source']);
-    }
-    if (@$social_post['quoted_status']['source']) {
-      $social_post['quoted_status']['source'] = htmlspecialchars($social_post['quoted_status']['source']);
-      $social_post['quoted_status']['text'] = htmlentities($social_post['quoted_status']['text']);
-    }
-    if (@$social_post['retweeted_status']['source']) {
-      $social_post['retweeted_status']['source'] = htmlspecialchars($social_post['retweeted_status']['source']);
-      $social_post['retweeted_status']['text'] = htmlentities($social_post['retweeted_status']['text']);
-    }
+    array_walk_recursive($social_post, function(&$val, $key) {
+      if ($key === 'source') {
+        $val = htmlspecialchars($val);
+      }
+      if ($key === 'text') {
+        $val = htmlentities($val);
+      }
+    });
 
     return array(
       'permalink' => 'https://twitter.com/'.$social_post['user']['screen_name'].'/status/'.$social_post['id_str'],
