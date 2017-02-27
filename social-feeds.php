@@ -374,38 +374,44 @@ class SocialFeeds {
    * Process cron update
    */
   public static function run_update($network = '') {
+    if ($network === 'instagram') {
+      $sync_start_date = false;
 
-    $sync_date = time();
+      $last_post = new WP_Query( array(
+        'post_type'  =>  'social-post',
+        'post_status' => 'publish',
+        'meta_key' => 'social_post_created',
+        'orderby' => 'meta_value',
+        'order' => 'DESC',
+        'posts_per_page' => 1,
+        'tax_query' => array(
+            array(
+                'taxonomy' => 'social_types',
+                'field' => 'slug',
+                'terms' => $network,
+            ),
+          )
+      ) );
 
-    $last_post = new WP_Query( array(
-      'post_type'  =>  'social-post',
-      'post_status' => 'publish',
-      'meta_key' => 'social_post_created',
-      'orderby' => 'meta_value',
-      'order' => 'DESC',
-      'posts_per_page' => 1,
-      'tax_query' => array(
-          array(
-              'taxonomy' => 'social_types',
-              'field' => 'slug',
-              'terms' => $network,
-          ),
-        )
-    ) );
-
-    if ( $last_post->have_posts() ) {
-      while ($last_post->have_posts()) { $last_post->the_post();
-        $sync_date = get_post_time('U', true);
+      if ( $last_post->have_posts() ) {
+        while ($last_post->have_posts()) { $last_post->the_post();
+          $sync_start_date = get_post_time('U', true);
+        }
       }
+
+      $sync_now = new Update\InstagramFeed(array(
+        'sync_start_date' => $sync_start_date,
+        'sync_publish' => get_option( 'instagram_auto_publish' )
+      ));
+    } else if($network === 'twitter') {
+      $sync_now = new Update\TwitterFeed(array(
+        'sync_publish' => get_option( 'twitter_auto_publish' )
+      ));
+    } else if($network === 'linkedin') {
+      $sync_now = new Update\LinkedInFeed(array(
+        'sync_publish' => get_option( 'linkedin_auto_publish' )
+      ));
     }
-
-    $network_feed = 'Update\\'.$network.'Feed';
-
-    $sync_now = new $network_feed(array(
-      'sync_start_date' => $sync_date,
-      'sync_publish' => get_option( $network.'_auto_publish' )
-    ));
-
   }
 
 }
